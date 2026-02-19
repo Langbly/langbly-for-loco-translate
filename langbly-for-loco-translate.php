@@ -5,7 +5,7 @@
  * Description: AI-powered translations for Loco Translate — a drop-in Google Translate replacement, 5x cheaper with better quality.
  * Author: Langbly
  * Author URI: https://langbly.com
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires at least: 5.6
  * Requires PHP: 7.4
  * Requires Plugins: loco-translate

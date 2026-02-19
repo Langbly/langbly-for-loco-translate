@@ -63,14 +63,18 @@ function langbly_loco_translate_batch( $targets, array $items, Loco_Locale $loca
 
 	// Determine source language code.
 	$source_lang = 'en';
-	if ( class_exists( 'Loco_mvc_PostParams' ) ) {
-		$params = Loco_mvc_PostParams::get();
-		if ( isset( $params['source'] ) && is_string( $params['source'] ) && '' !== $params['source'] ) {
-			$source_locale = Loco_Locale::parse( $params['source'] );
-			if ( $source_locale instanceof Loco_Locale ) {
-				$source_lang = langbly_loco_map_locale( $source_locale );
+	try {
+		if ( class_exists( 'Loco_mvc_PostParams' ) ) {
+			$params = Loco_mvc_PostParams::get();
+			if ( isset( $params['source'] ) && is_string( $params['source'] ) && '' !== $params['source'] ) {
+				$source_locale = Loco_Locale::parse( $params['source'] );
+				if ( $source_locale instanceof Loco_Locale ) {
+					$source_lang = langbly_loco_map_locale( $source_locale );
+				}
 			}
 		}
+	} catch ( Exception $e ) {
+		// Fall back to 'en' if source locale detection fails.
 	}
 
 	// Split into chunks respecting API limits.
@@ -89,7 +93,7 @@ function langbly_loco_translate_batch( $targets, array $items, Loco_Locale $loca
 				'headers' => array(
 					'Content-Type' => 'application/json',
 					'X-API-Key'    => $api_key,
-					'User-Agent'   => 'langbly-loco-translate/1.0.0',
+					'User-Agent'   => 'langbly-loco-translate/1.0.2',
 				),
 				'body'    => wp_json_encode(
 					array(
@@ -215,7 +219,7 @@ function langbly_loco_chunk_strings( array $strings ) {
  * @return string ISO 639-1 language code.
  */
 function langbly_loco_map_locale( Loco_Locale $locale ) {
-	$tag = $locale->__toString();
+	$tag = (string) $locale;
 
 	// Special cases that need the full tag or a specific mapping.
 	$special_map = array(
@@ -235,10 +239,9 @@ function langbly_loco_map_locale( Loco_Locale $locale ) {
 		return $special_map[ $normalized ];
 	}
 
-	// Default: return first two characters (ISO 639-1).
-	$lang = $locale->lang;
-	if ( ! empty( $lang ) ) {
-		return strtolower( $lang );
+	// Default: return primary language subtag.
+	if ( isset( $locale->lang ) && ! empty( $locale->lang ) ) {
+		return strtolower( $locale->lang );
 	}
 
 	return strtolower( substr( $tag, 0, 2 ) );
