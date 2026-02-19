@@ -3,7 +3,7 @@ Contributors: langbly
 Tags: translation, loco-translate, machine-translation, ai, localization
 Requires at least: 5.6
 Tested up to: 6.7
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,15 @@ Yes. Langbly automatically protects printf placeholders (%s, %d, %1$s) and other
 
 == Changelog ==
 
+= 1.0.2 =
+* Wrap source locale detection in try/catch for better error resilience
+* Use explicit cast for locale string conversion
+* Simplify primary language subtag extraction
+* Update User-Agent header to match version
+
+= 1.0.1 =
+* Version bump, minor internal improvements
+
 = 1.0.0 =
 * Initial release
 * Batch translation support
@@ -83,5 +92,5 @@ Yes. Langbly automatically protects printf placeholders (%s, %d, %1$s) and other
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-Initial release of Langbly for Loco Translate.
+= 1.0.2 =
+Improved error handling for source locale detection. Recommended update.
